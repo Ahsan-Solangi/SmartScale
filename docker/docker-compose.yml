@@ -1,0 +1,24 @@
+
+version: '3.8'
+
+services:
+  ml_training:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.train
+    volumes:
+      - ./models:/app/models
+    command: python src/model_training.py
+
+  ml_serving:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.serve
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      - ml_training
+
+
